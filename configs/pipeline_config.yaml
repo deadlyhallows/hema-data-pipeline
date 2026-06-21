@@ -1,0 +1,33 @@
+pipeline:
+  name: hema-retail-sales
+  environment: dev  # dev | staging | prod
+
+s3:
+  bucket: hema-data-lake
+  raw_prefix: raw/superstore/
+  bronze_prefix: bronze/retail_sales/
+  silver_prefix: silver/retail_sales/
+  gold_sales_prefix: gold/sales/
+  gold_customer_prefix: gold/customer/
+
+glue:
+  database: hema_retail
+  bronze_table: bronze_retail_sales
+  silver_table: silver_retail_sales
+  gold_sales_table: gold_sales
+  gold_customer_table: gold_customer
+  iam_role: arn:aws:iam::123456789012:role/GlueETLRole
+
+partitioning:
+  columns:
+    - year
+    - month
+    - day
+
+reference:
+  # Latest date in the Superstore dataset — used as anchor for rolling aggregations
+  dataset_latest_date: "2018-12-30"
+
+logging:
+  level: INFO
+  format: json
